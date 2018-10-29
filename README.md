@@ -45,3 +45,10 @@ $ python crawler.py [-h] [-j] [-d] url
 * `-h, --help`  -  show this help message and exit
 * `-j, --json`  -  JSON dump filename
 * `-d, --depth` -  Crawler depth (default = 0)
+
+## Issues
+
+### Crawler depth
+The crawler finds more links for depth 2 than 3. This should, maybe, not be the case since the crawler would dig deeper and therefore find more links.
+
+Fix?: The crawler ignores to click link if the crawler already have clicked it (checks the internal dictionary `all_links` if dict contains the link as a key). Check, via the .json test files, if a link (key), contains a longer list, of links, than the other. If that is the case, maybe the crawler, which goes to a deeper depth, clicks on a link from a different site than the smaller depth crawler, and therefore gets shown a different amount of links.
