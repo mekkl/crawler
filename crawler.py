@@ -7,8 +7,6 @@ import requests
 import re
 import time
 import datetime
-import pprint
-from selenium import webdriver
 from tqdm import tqdm
 import json
 from dateparser import parse
