@@ -108,6 +108,7 @@ def get_dates_and_prices(scraped_events):
     return data_points
 
 ## REPRESENT CLASS ATTRIBUTE start and epoch params!!!!  !!! 
+## PARAMS: timeout ,start, epoch
 ## TODO: Change scrape_links() to class with attribute!!!!
 def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'links':{}}, start=None, epoch=None):
     '''
@@ -126,7 +127,7 @@ def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'links':{}}, star
     if for_depth >= 0 and links['links'].get(from_url) is None: 
         
         try: # ---- try, except block if requests raises exception ----
-            r = requests.get(from_url, timeout=(2,2))
+            r = requests.get(from_url, timeout=(5,5))
             r.raise_for_status() # raise hvis status for get ikke er ok
 
             # ---- Continue if string contains HTML elements ----
@@ -202,4 +203,3 @@ if __name__ == '__main__':
         print('')
         print('')
         sys.exit(1)
-    
