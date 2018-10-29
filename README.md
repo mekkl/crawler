@@ -1,11 +1,8 @@
 
 ## Python Webcrawler project
-
 `url` to use: `http://www.pythex.org`
 
 ## Dependencies
-
-
 [tqdm](https://github.com/tqdm/tqdm): A fast, extensible progress bar for Python and CLI
 ```
 $ pip install argparse
@@ -32,13 +29,17 @@ $ pip install requests
 ```
 
 ## Usage
-
 ```
 $ python crawler.py [-h] [-j] [-d] url
 ```
 
-### positional arguments:
+### Example
+```
+$ python crawler.py -j file_name -d 2 http://www.pythex.org
+```
 
+
+### positional arguments:
 - `url`  -  Starting point for crawler
 
 ### optional arguments: 
