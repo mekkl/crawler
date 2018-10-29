@@ -38,6 +38,7 @@ $ python crawler.py [-h] [-j] [-d] url
 $ python crawler.py -j file_name -d 2 http://www.pythex.org
 ```
 
+Outputs a file named `file_name.json` to the project root.
 
 ### positional arguments:
 - `url`  -  Starting point for crawler
