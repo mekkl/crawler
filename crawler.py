@@ -12,7 +12,20 @@ import json
 from dateparser import parse
 import argparse # https://docs.python.org/3/howto/argparse.html
 
+def _pretty_console_dict_print(dct):
+    dct_str = str(dct)
+    if len(dct_str) > 1000:
+        return f'\n\n{dct_str[:500]} \n\t\t.\n\t\t.\n\t\t.\n{dct_str[-499:-1]}'
+    else:
+        return f'\n\n{dct}'
 
+def _exception_dict(e):
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    return {'exception': {'message': e, 'exc_type': exc_type, 'fname': fname, 'lineno': exc_tb.tb_lineno}}
+
+def _project_abspath():
+    return os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
 
 ## REPRESENT CLASS ATTRIBUTE start and epoch params!!!!  !!! 
@@ -23,6 +36,7 @@ def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'total_runtime': 
         URL validation: https://stackoverflow.com/questions/7160737/python-how-to-validate-a-url-in-python-malformed-or-not
         HTML validation: http://www.mkyong.com/regular-expressions/how-to-validate-html-tag-with-regular-expression/
     '''
+    # ---- start elapsed-timer ----
     if not bool(all_links['links']):
         start = datetime.datetime.now()
 
@@ -86,9 +100,7 @@ def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'total_runtime': 
             ''' 
             build exception dictionary to console print
             '''
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            e_dict = {'message': e, 'exc_type': exc_type, 'fname': fname, 'lineno': exc_tb.tb_lineno}
+            e_dict = _exception_dict(e)
             print(f', exception: {e_dict}')
             return links # return if request didn't returned ok
 
@@ -106,6 +118,7 @@ if __name__ == '__main__':
         # ---- program arg setup ----
         parser = argparse.ArgumentParser()
         parser.add_argument("url", help="Starting point for crawler")
+        parser.add_argument('-c', '--console', action='store_true', help='print data to console')
         parser.add_argument('-j', '--json', help='data dump to JSON (param filename)')
         parser.add_argument('-p', '--py', help='data dump to .py module (param filename)')
         parser.add_argument("-d", "--depth", help="Crawler Depth", type=int)
@@ -115,20 +128,25 @@ if __name__ == '__main__':
         url = args.url
         json_file_name = args.json if args.json else None
         py_file_name = args.py if args.py else None
+        console_print_flag = args.console if args.console else False
         depth = args.depth if args.depth else 0
 
         # ---- start crawler ----
         scraped_links = scrape_links(url, depth)
 
-        # ---- handle result ----
+        
+        # -- create dir, for data output, if not exists --
+        if not os.path.exists(f'{_project_abspath()}/data'):
+            os.makedirs(f'{_project_abspath()}/data')
+        # ---- output data ----
+        if console_print_flag:
+            print(_pretty_console_dict_print(scraped_links))
         if json_file_name is not None:
-            with open(f'{json_file_name}.json', 'w') as fp:
+            with open(f'{_project_abspath()}/data/{json_file_name}.json', 'w') as fp:
                 json.dump(scraped_links, fp)
         if py_file_name is not None:
-            with open(f'{py_file_name}.py', 'w') as fp:
+            with open(f'{_project_abspath()}/data/{py_file_name}.py', 'w') as fp:
                 fp.write(f'SERIALIZED = {scraped_links}')
-        else:
-            print(scraped_links)
 
         print('') # console style
         print('') # console style
@@ -144,15 +162,18 @@ if __name__ == '__main__':
         print('') # console style
         print('catching crawler and handles found links...')
 
-        # ---- handle result ----
+        # -- create dir, for data output, if not exists --
+        if not os.path.exists(f'{_project_abspath()}/data'):
+            os.makedirs(f'{_project_abspath()}/data')
+        # ---- output data ----
+        if console_print_flag:
+            print(_pretty_console_dict_print(scraped_links))
         if json_file_name is not None:
-            with open(f'{json_file_name}.json', 'w') as fp:
+            with open(f'{_project_abspath()}/data/{json_file_name}.json', 'w') as fp:
                 json.dump(scraped_links, fp)
         if py_file_name is not None:
-            with open(f'{py_file_name}.py', 'w') as fp:
+            with open(f'{_project_abspath()}/data/{py_file_name}.py', 'w') as fp:
                 fp.write(f'SERIALIZED = {scraped_links}')
-        else:
-            print(scraped_links)
 
         print('') # console style
         print('') # console style
@@ -161,9 +182,7 @@ if __name__ == '__main__':
         ''' 
         build exception dictionary to console print
         '''
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        e_dict = {'message': e, 'exc_type': exc_type, 'fname': fname, 'lineno': exc_tb.tb_lineno}
+        e_dict = _exception_dict(e)
         print(f', exception: {e_dict}')
         print('') # console style
         print('') # console style
