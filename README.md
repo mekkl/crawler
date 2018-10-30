@@ -30,7 +30,7 @@ $ pip install requests
 
 ## Usage
 ```
-$ python crawler.py [-h] [-j] [-d] url
+$ python crawler.py [-h] [-j] [-d] [-p] url
 ```
 
 ### Example
@@ -45,7 +45,8 @@ Outputs a file named `file_name.json` to the project root.
 
 ### optional arguments: 
 * `-h, --help`  -  show this help message and exit
-* `-j, --json`  -  JSON dump filename
+* `-j, --json`  -  Data dump as json in JSON file. Param is the filename
+* `-p, --py`    -  Data dump as dictionary in .py file. Param is the filename
 * `-d, --depth` -  Crawler depth (default = 0)
 
 ## Issues

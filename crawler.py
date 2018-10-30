@@ -101,24 +101,30 @@ if __name__ == '__main__':
         # ---- program arg setup ----
         parser = argparse.ArgumentParser()
         parser.add_argument("url", help="Starting point for crawler")
-        parser.add_argument('-j', '--json', help='JSON dump')
+        parser.add_argument('-j', '--json', help='data dump to JSON (param filename)')
+        parser.add_argument('-p', '--py', help='data dump to .py module (param filename)')
         parser.add_argument("-d", "--depth", help="Crawler Depth", type=int)
         args = parser.parse_args()
 
         # ---- checking given args ----
         url = args.url
-        file_name = args.json if args.json else None
+        json_file_name = args.json if args.json else None
+        py_file_name = args.py if args.py else None
         depth = args.depth if args.depth else 0
 
         # ---- start crawler ----
         scraped_links = scrape_links(url, depth)
 
         # ---- handle result ----
-        if file_name is not None:
-            with open(f'{file_name}.json', 'w') as fp:
+        if json_file_name is not None:
+            with open(f'{json_file_name}.json', 'w') as fp:
                 json.dump(scraped_links, fp)
+        if py_file_name is not None:
+            with open(f'{py_file_name}.py', 'w') as fp:
+                fp.write(f'SERIALIZED = {scraped_links}')
         else:
             print(scraped_links)
+            
         print('') # console style
         print('') # console style
     
@@ -134,9 +140,12 @@ if __name__ == '__main__':
         print('catching crawler and handles found links...')
 
         # ---- handle result ----
-        if file_name is not None:
-            with open(f'{file_name}.json', 'w') as fp:
+        if json_file_name is not None:
+            with open(f'{json_file_name}.json', 'w') as fp:
                 json.dump(scraped_links, fp)
+        if py_file_name is not None:
+            with open(f'{py_file_name}.py', 'w') as fp:
+                fp.write(f'SERIALIZED = {scraped_links}')
         else:
             print(scraped_links)
 
