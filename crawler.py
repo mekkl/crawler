@@ -36,7 +36,7 @@ def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'total_runtime': 
     regex_html = re.compile(r"<(\"[^\"]*\"|'[^']*'|[^'\">])*>", re.IGNORECASE) # HTML elements
 
     # ---- Continue if depth >= 0 and if link doesn't already have been scraped ----
-    if for_depth >= 0 and links['links'].get(from_url) is None: 
+    if for_depth >= 0 and links.get('links', {}).get(from_url) is None: 
         links['links'].setdefault(from_url, []) # create list for new link key
 
         # ---- try, except block if requests raises exception ----
