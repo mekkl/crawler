@@ -18,7 +18,7 @@ import argparse # https://docs.python.org/3/howto/argparse.html
 ## REPRESENT CLASS ATTRIBUTE start and epoch params!!!!  !!! 
 ## PARAMS: timeout ,start, epoch
 ## TODO: Change scrape_links() to class with attribute!!!!
-def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'links':{}}, start=None, epoch=None):
+def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'total_runtime': 0, 'links':{}}, start=None, epoch=None):
     '''
         URL validation: https://stackoverflow.com/questions/7160737/python-how-to-validate-a-url-in-python-malformed-or-not
         HTML validation: http://www.mkyong.com/regular-expressions/how-to-validate-html-tag-with-regular-expression/
@@ -56,10 +56,11 @@ def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'links':{}}, star
                     # ---- Continue if href value matches URL pattern (regex) ----
                     if re.match(regex_url, url) is not None: 
                         links['links'][from_url].append(url) # append found link to list
-                        links['found'] = links['found'] + 1
+                        links['found'] = links.get('found', 0) + 1
                         
                         epoch = datetime.datetime.now()
                         elapsed = epoch - start
+                        links['total_runtime'] = elapsed.total_seconds()
 
                         # ---- print to console ----
                         sys.stdout.write(f'\rnum_of_links: {links["found"]}, running_time (sec): {elapsed.total_seconds()}, for_depth: {for_depth}')
@@ -124,7 +125,7 @@ if __name__ == '__main__':
                 fp.write(f'SERIALIZED = {scraped_links}')
         else:
             print(scraped_links)
-            
+
         print('') # console style
         print('') # console style
     
