@@ -44,10 +44,11 @@ Outputs a file named `file_name.json` to the project root.
 - `url`  -  Starting point for crawler
 
 ### optional arguments: 
-* `-h, --help`  -  show this help message and exit
-* `-j, --json`  -  Data dump as json in JSON file. Param is the filename
-* `-p, --py`    -  Data dump as dictionary in .py file. Param is the filename
-* `-d, --depth` -  Crawler depth (default = 0)
+* `-h, --help`   -  show this help message and exit
+* `-c, --console`-  Show data output in console print
+* `-j, --json`   -  Data dump as json in JSON file - `Param`: is the filename
+* `-p, --py`     -  Data dump as dictionary in .py file - `Param`: is the filename
+* `-d, --depth`  -  Crawler depth (default = 0)
 
 ## Issues
 
