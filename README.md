@@ -61,3 +61,18 @@ The current function, which runs the crawler code, should be created as a class 
 
 ### Result when ctrl-c
 Right now, when a user presses ctrl-c, the scipt is setup to return the dictionary, via. the `KeyboardInterrupt`, with found links. This work, but the key `found` in the dictionary have a value of `0` whatever amount of links the crawler find.
+
+## Issue with .dmg
+~~The crawler have had some issues with parsing .dmg through bs4. It's problably taking to much time. It seems that the regex `"<(\"[^\"]*\"|'[^']*'|[^'\">])*>"` didn't rule out .dmg files.~~
+
+A fix which seems to work (and I don't know why I first think of this now) is that the crawler matches the 'Content-Type' response header to match `text/html`.
+
+- Change: 
+``` python
++ if 'text/html' in r.headers['Content-type']:
+```
+
+- From:
+``` python
+- if re.match(regex_html, r.text) is not None:
+```

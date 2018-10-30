@@ -33,7 +33,8 @@ def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'total_runtime': 
     # ---- regex setup ----
     regex_url = re.compile( r'^(?:http|ftp)s?://', # http:// or https://
                         re.IGNORECASE) 
-    regex_html = re.compile(r"<(\"[^\"]*\"|'[^']*'|[^'\">])*>", re.IGNORECASE) # HTML elements
+    # regex_html not needed because of text/html Content-type value checker?
+    # regex_html = re.compile(r"<(\"[^\"]*\"|'[^']*'|[^'\">])*>", re.IGNORECASE) # HTML elements
 
     # ---- Continue if depth >= 0 and if link doesn't already have been scraped ----
     if for_depth >= 0 and links.get('links', {}).get(from_url) is None: 
@@ -45,19 +46,22 @@ def scrape_links(from_url, for_depth=0, all_links={'found': 0, 'total_runtime': 
             r.raise_for_status() # raise hvis status for get ikke er 'OK'
 
             # ---- Continue if response text matches HTML elements pattern (regex) ----
-            if re.match(regex_html, r.text) is not None: 
+            # OBS: line below is for matching a regex up against the response content
+            #if re.match(regex_html, r.text) is not None: 
+            # OBS: line below is for matching a string up against the response header 'Content-type'
+            if 'text/html' in r.headers['Content-type']:
                 soup = bs4.BeautifulSoup(r.text, 'html5lib') # parse HTML
                 a_tags = soup.find_all('a') # find all a tags
                 
                 for a_tag in a_tags:
                     url = a_tag.attrs.get('href', '')
                     url = url[:-1] if len(url) > 0 and url[-1] == '/' else url # remove '/' from the last position
-
+                    
                     # ---- Continue if href value matches URL pattern (regex) ----
                     if re.match(regex_url, url) is not None: 
                         links['links'][from_url].append(url) # append found link to list
                         links['found'] = links.get('found', 0) + 1
-                        
+
                         epoch = datetime.datetime.now()
                         elapsed = epoch - start
                         links['total_runtime'] = elapsed.total_seconds()
