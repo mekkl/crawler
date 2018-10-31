@@ -30,7 +30,7 @@ $ pip install requests
 
 ## Usage
 ```
-$ python crawler.py [-h] [-j] [-d] [-p] url
+$ python crawler.py [OPTIONAL] url
 ```
 
 ### Example
